@@ -1,0 +1,24 @@
+{
+  "name": "rspack-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rspack build",
+    "dev": "rspack serve"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rspack/cli": "^0.1.0",
+    "sass": "^1.59.3",
+    "sass-loader": "^13.2.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

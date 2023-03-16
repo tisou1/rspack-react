@@ -1,0 +1,1 @@
+{"version":3,"file":"main.css","sources":["src/index.scss"],"sourcesContent":[".main{\n  font-size: 20px;\n  color: red;\n}"],"names":[],"mappings":"AAAA,CAAC,IAAI,CACH,SAAS,CAAC,EAAV,GACA,KAAK,CAAC,GAAN"}
