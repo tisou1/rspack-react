@@ -1,56 +1,62 @@
-import { useState, useEffect, useRef } from "react"
-export default function useKeyPress(keyEvent) {
-  // {'l': () => {}}
-
-  // 不区分大小写
-  const keysRef = useRef(Object.keys(keyEvent))
-
-  const handleKeyDown = e => {
-    console.log(e)
-    // 当前按下的键
-    const curKey = e.key
-
-    if (keysRef.current.includes(curKey)) {
-      keyEvent[e.key]?.()
-    }
-  }
+import { useEffect } from 'react'
+export default function useKeyDown(shortcut, callback) {
+  const keys = shortcut.toLowerCase().split('.')
 
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown)
+    function handleKeyDown(event) {
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i]
+        if (key === 'meta' && !event.metaKey)
+          return
+
+        else if (key === 'ctrl' && !event.ctrlKey)
+          return
+
+        else if (key === 'alt' && !event.altKey)
+          return
+
+        else if (key === 'shift' && !event.shiftKey)
+          return
+
+        else if (key !== 'meta' && key !== 'ctrl' && key !== 'alt' && key !== 'shift' && event.key.toLowerCase() !== key)
+          return
+      }
+
+      callback(event)
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown)
+      document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [])
+  }, [callback, keys])
 }
 
-// 修饰键
+export function useShortcurt(shortcut, callback) {
+  const keys = shortcut.split('.')
 
-const modifyierKey = {
-  ctrl: "ctrl",
-  shift: "shift",
-  alt: "alt",
-  meta: "meta",
-}
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (keys.every((key) => {
+        if (key === 'meta')
+          return event.metaKey
+        if (key === 'ctrl')
+          return event.ctrlKey
+        if (key === 'alt')
+          return event.altKey
+        if (key === 'shift')
+          return event.shiftKey
+        return event.key.toLowerCase() === key
+      }))
 
-/**
- *
- * @param {} event  触发事件
- * @param {*} keys  hook接收的按键
- */
-function judgeKey(event, keys) {
-  if (!event.key) return false
-  // 传入的键拆开
-  const genArr = keys.split(".")
-  let genLen = 0
-
-  for (const key of genArr) {
-    // 组合键
-    // const genModifer = modifyierKey[key]
-    if (event.key === key) {
-      genLen++
+        callback(event)
     }
-  }
 
-  return genLen === genArr.length
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [shortcut, callback])
 }
